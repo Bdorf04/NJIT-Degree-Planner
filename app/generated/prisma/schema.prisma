@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  hashedPassword String
+  fullName       String
+  studentYear    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  majorId        String?
+  plans          Plan[]
+  major          Major?   @relation(fields: [majorId], references: [id])
+}
+
+model Major {
+  id          String        @id @default(cuid())
+  name        String        @unique
+  description String?
+  courses     MajorCourse[]
+  users       User[]
+}
+
+model Course {
+  id                  String          @id @default(cuid())
+  code                String          @unique
+  name                String
+  credits             Int
+  description         String?
+  recommendedSemester Int?
+  majors              MajorCourse[]
+  plannedCourses      PlannedCourse[]
+  prerequisites       Prerequisite[]  @relation("CoursePrerequisites")
+  isPrereqFor         Prerequisite[]  @relation("PrerequisiteCourses")
+  corequisites        Corequisite[]   @relation("CourseCorequisites")
+  isCoreqFor          Corequisite[]   @relation("CorequisiteCourses")
+}
+
+model MajorCourse {
+  id       String @id @default(cuid())
+  majorId  String
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+  major    Major  @relation(fields: [majorId], references: [id])
+
+  @@unique([majorId, courseId])
+}
+
+model Prerequisite {
+  id             String @id @default(cuid())
+  courseId       String
+  prerequisiteId String
+  groupId        Int
+  course         Course @relation("CoursePrerequisites", fields: [courseId], references: [id])
+  prerequisite   Course @relation("PrerequisiteCourses", fields: [prerequisiteId], references: [id])
+
+  @@unique([courseId, prerequisiteId])
+}
+
+model Corequisite {
+  id            String @id @default(cuid())
+  courseId      String
+  corequisiteId String
+  course        Course @relation("CourseCorequisites", fields: [courseId], references: [id])
+  corequisite   Course @relation("CorequisiteCourses", fields: [corequisiteId], references: [id])
+
+  @@unique([courseId, corequisiteId])
+}
+
+model Plan {
+  id             String          @id @default(cuid())
+  name           String
+  userId         String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  user           User            @relation(fields: [userId], references: [id])
+  plannedCourses PlannedCourse[]
+}
+
+model PlannedCourse {
+  id        String   @id @default(cuid())
+  planId    String
+  courseId  String
+  semester  Int
+  year      Int
+  createdAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id])
+  plan      Plan     @relation(fields: [planId], references: [id])
+
+  @@unique([planId, courseId])
+}
