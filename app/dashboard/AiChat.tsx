@@ -171,7 +171,7 @@ export default function AiChat({ planId, onRefresh, messages, setMessages, undoS
 
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
         {messages.length === 0 && (
-          <p className="text-xs text-gray-400 italic">No messages yet. Try "Move CS 114 to semester 3".</p>
+          <p className="text-xs text-gray-400 italic">Try &quot;Move CS 114 to semester 3&quot;.</p>
         )}
         {messages.map((msg, i) => (
           <div
