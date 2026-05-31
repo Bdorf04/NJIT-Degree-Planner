@@ -1,4 +1,5 @@
 import { auth } from "./auth"
+export const runtime = "nodejs"
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth
