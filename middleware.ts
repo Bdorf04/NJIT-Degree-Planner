@@ -13,7 +13,7 @@ export default auth((req) => {
       return Response.redirect(new URL("/dashboard", req.nextUrl))
     }
     return // let unauthenticated users see the landing page
-  }
+  } 
 
   if (!isLoggedIn && !isAuthPage) {
     return Response.redirect(new URL("/login", req.nextUrl))
