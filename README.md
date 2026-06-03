@@ -1,5 +1,7 @@
 # NJIT Degree Planner
 
+🔗 [Live Demo](https://njit-degree-planner.vercel.app)
+
 A full-stack 4-year academic planner for NJIT Computer Science students.
 
 ## Features
